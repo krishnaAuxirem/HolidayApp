@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Plane } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import logo from '@/assets/logo.png';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,7 +11,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+  const [role, setRole] = useState<'traveler' | 'vendor'>('traveler');
+
   const { login, signup } = useAuth();
   const navigate = useNavigate();
 
@@ -21,7 +23,12 @@ const Login = () => {
     if (isLogin) {
       const success = await login(email, password);
       if (success) {
-        navigate('/');
+        const storedUser = JSON.parse(localStorage.getItem('holidayapp_user') || '{}');
+        if (storedUser?.role === 'admin' || storedUser?.role === 'vendor') {
+          navigate('/dashboard/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         setError('Invalid email or password');
       }
@@ -30,9 +37,13 @@ const Login = () => {
         setError('Please fill in all fields');
         return;
       }
-      const success = await signup(name, email, password);
+      const success = await signup(name, email, password, role);
       if (success) {
-        navigate('/');
+        if (role === 'vendor') {
+          navigate('/dashboard/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         setError('Email already exists');
       }
@@ -50,10 +61,7 @@ const Login = () => {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
-                <Plane className="h-8 w-8 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-gradient">HolidayApp</span>
+              <img src={logo} alt="HolidayApp" className="h-16 w-auto" />
             </div>
           </div>
 
@@ -105,6 +113,22 @@ const Login = () => {
                 />
               </div>
             </div>
+
+            {!isLogin && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Account Type
+                </label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as 'traveler' | 'vendor')}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="traveler">Traveler (Customer)</option>
+                  <option value="vendor">Vendor / Travel Agency</option>
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

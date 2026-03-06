@@ -1,3 +1,5 @@
+export type UserRole = 'traveler' | 'vendor' | 'admin';
+
 export interface Destination {
   id: string;
   name: string;
@@ -69,6 +71,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  role: UserRole;
   avatar?: string;
   wishlist: string[];
   bookings: Booking[];

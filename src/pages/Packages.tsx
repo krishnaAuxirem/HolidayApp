@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { SlidersHorizontal } from 'lucide-react';
 import PackageCard from '@/components/PackageCard';
 import { packages } from '@/data/packages';
+import { useCurrency } from '@/context/CurrencyContext';
 import heroImage from '@/assets/hero-packages.jpg';
 
 const Packages = () => {
+  const { formatPrice } = useCurrency();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
   const [selectedType, setSelectedType] = useState<string>('all');
   const [minRating, setMinRating] = useState<number>(0);
@@ -73,8 +75,8 @@ const Packages = () => {
                         className="w-full"
                       />
                       <div className="flex justify-between text-sm text-gray-600">
-                        <span>${priceRange[0]}</span>
-                        <span>${priceRange[1]}</span>
+                        <span>{formatPrice(priceRange[0], { maximumFractionDigits: 0 })}</span>
+                        <span>{formatPrice(priceRange[1], { maximumFractionDigits: 0 })}</span>
                       </div>
                     </div>
                   </div>

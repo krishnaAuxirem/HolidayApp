@@ -10,7 +10,8 @@ interface DestinationCardProps {
 const DestinationCard = ({ destination }: DestinationCardProps) => {
   return (
     <motion.div
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       className="group relative overflow-hidden rounded-2xl shadow-lg"
     >
       <Link to={`/destinations/${destination.id}`}>

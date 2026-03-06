@@ -15,6 +15,24 @@ const Home = () => {
   const popularPackages = packages.slice(0, 4);
   const latestBlogs = blogs.slice(0, 3);
 
+  const heroContainer = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.9,
+        ease: 'easeOut',
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -30,40 +48,49 @@ const Home = () => {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            variants={heroContainer}
+            initial="hidden"
+            animate="visible"
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            <motion.h1
+              variants={heroItem}
+              className="text-5xl md:text-7xl font-bold text-white mb-6"
+            >
               Discover Your Next
               <span className="block gradient-secondary bg-clip-text text-transparent">
                 Dream Adventure
               </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
+            </motion.h1>
+            <motion.p
+              variants={heroItem}
+              className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto"
+            >
               Explore the world's most beautiful destinations with exclusive travel packages
               tailored just for you
-            </p>
+            </motion.p>
 
-            <div className="mb-16">
+            <motion.div variants={heroItem} className="mb-16">
               <SearchBar />
-            </div>
+            </motion.div>
 
-            <div className="flex flex-wrap gap-4 justify-center">
+            <motion.div
+              variants={heroItem}
+              className="flex flex-wrap gap-4 justify-center"
+            >
               <Link
                 to="/packages"
-                className="px-8 py-4 gradient-primary text-white rounded-lg font-semibold hover:shadow-2xl transition-all flex items-center gap-2"
+                className="px-8 py-4 gradient-primary text-white rounded-lg font-semibold hover:shadow-2xl transition-all flex items-center gap-2 button-glow"
               >
                 Explore Packages
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <Link
                 to="/destinations"
-                className="px-8 py-4 glass text-white rounded-lg font-semibold hover:bg-white/20 transition-all"
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow-md hover:shadow-xl transition-all"
               >
                 View Destinations
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -379,7 +406,7 @@ const Home = () => {
                 className="flex-1 px-6 py-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <button className="px-8 py-4 gradient-primary text-white rounded-lg font-semibold hover:shadow-lg transition-shadow whitespace-nowrap">
-                Subscribe
+                Subscribe   
               </button>
             </div>
           </motion.div>

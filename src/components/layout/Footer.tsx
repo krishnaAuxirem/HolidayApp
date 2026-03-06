@@ -53,12 +53,12 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Top Destinations</h3>
             <ul className="space-y-2">
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Santorini, Greece</Link></li>
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Bali, Indonesia</Link></li>
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Maldives</Link></li>
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Paris, France</Link></li>
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Dubai, UAE</Link></li>
-              <li><Link to="/destinations" className="hover:text-blue-400 transition-colors">Tokyo, Japan</Link></li>
+              <li><Link to="/destinations/dest-1" className="hover:text-blue-400 transition-colors">Santorini, Greece</Link></li>
+              <li><Link to="/destinations/dest-2" className="hover:text-blue-400 transition-colors">Bali, Indonesia</Link></li>
+              <li><Link to="/destinations/dest-3" className="hover:text-blue-400 transition-colors">Maldives</Link></li>
+              <li><Link to="/destinations/dest-4" className="hover:text-blue-400 transition-colors">Paris, France</Link></li>
+              <li><Link to="/destinations/dest-5" className="hover:text-blue-400 transition-colors">Dubai, UAE</Link></li>
+              <li><Link to="/destinations/dest-6" className="hover:text-blue-400 transition-colors">Tokyo, Japan</Link></li>
             </ul>
           </div>
 

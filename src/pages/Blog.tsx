@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import BlogCard from '@/components/BlogCard';
 import { blogs } from '@/data/blogs';
+import heroHome from '@/assets/hero-home.jpg';
 
 const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,14 +24,35 @@ const Blog = () => {
   return (
     <div className="min-h-screen pt-20">
       {/* Hero Section */}
-      <section className="relative h-96 flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Travel <span className="text-yellow-300">Blog</span>
+      <section className="relative h-[420px] flex items-center">
+        <div className="absolute inset-0">
+          <img
+            src={heroHome}
+            alt="Travel blog background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/30 to-black/80" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white backdrop-blur">
+              Travel stories, tips & inspiration
+            </span>
+            <h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              HolidayApp
+              <span className="block gradient-secondary bg-clip-text text-transparent">
+                Travel Blog
+              </span>
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Tips, guides, and inspiration for your next adventure
+            <p className="mt-4 text-lg md:text-xl text-white/90 max-w-xl">
+              Discover guides, itineraries and insider tips to plan your next journey
+              with confidence.
             </p>
           </motion.div>
         </div>

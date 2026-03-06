@@ -1,20 +1,46 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { MapPinned, Search } from 'lucide-react';
 import DestinationCard from '@/components/DestinationCard';
+import TravelMap from '@/components/TravelMap';
 import { destinations } from '@/data/destinations';
+import { destinationGeoMap } from '@/data/geo';
 import heroImage from '@/assets/hero-destinations.jpg';
 
 const Destinations = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDestinationId, setSelectedDestinationId] = useState(destinations[0]?.id ?? '');
 
   const filteredDestinations = destinations.filter((dest) =>
     dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     dest.country.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const selectedDestination =
+    filteredDestinations.find((destination) => destination.id === selectedDestinationId) ??
+    filteredDestinations[0] ??
+    destinations[0];
+
+  const selectedGeo = selectedDestination ? destinationGeoMap[selectedDestination.id] : undefined;
+  const mapMarkers = selectedGeo
+    ? [
+        {
+          id: `${selectedDestination.id}-center`,
+          label: `${selectedDestination.name} City Center`,
+          position: selectedGeo.center,
+          description: `${selectedDestination.country}`,
+        },
+        ...selectedGeo.attractions.map((attraction, index) => ({
+          id: `${selectedDestination.id}-attraction-${index}`,
+          label: attraction.name,
+          position: attraction.position,
+          description: 'Top nearby attraction',
+        })),
+      ]
+    : [];
+
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-white dark:bg-gray-950 transition-colors duration-300">
       {/* Hero Section */}
       <section className="relative h-96 flex items-center justify-center">
         <div className="absolute inset-0">
@@ -42,7 +68,7 @@ const Destinations = () => {
       </section>
 
       {/* Search Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-gray-50 dark:bg-gray-900/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto">
             <div className="relative">
@@ -52,18 +78,71 @@ const Destinations = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search destinations..."
-                className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+                className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
               />
             </div>
           </div>
         </div>
       </section>
 
+      <section className="py-12 bg-white dark:bg-gray-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:items-center lg:justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
+                <MapPinned className="h-6 w-6 text-blue-500" />
+                Destination Explorer Map
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                View nearby attractions and a suggested local travel route.
+              </p>
+            </div>
+
+            <select
+              value={selectedDestination?.id ?? ''}
+              onChange={(event) => setSelectedDestinationId(event.target.value)}
+              className="w-full lg:w-80 px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+            >
+              {filteredDestinations.map((destination) => (
+                <option key={destination.id} value={destination.id}>
+                  {destination.name}, {destination.country}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedGeo && selectedDestination ? (
+            <>
+              <TravelMap
+                center={selectedGeo.center}
+                markers={mapMarkers}
+                route={selectedGeo.route}
+                zoom={8}
+              />
+              <div className="mt-4 flex flex-wrap gap-2">
+                {selectedGeo.attractions.map((attraction) => (
+                  <span
+                    key={attraction.name}
+                    className="px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-sm"
+                  >
+                    {attraction.name}
+                  </span>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-10 text-center text-gray-500 dark:text-gray-400">
+              No geolocation data available for the selected destination.
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Destinations Grid */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {filteredDestinations.length} Destinations Found
             </h2>
           </div>
@@ -83,16 +162,16 @@ const Destinations = () => {
 
           {filteredDestinations.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-xl text-gray-500">No destinations found. Try a different search.</p>
+              <p className="text-xl text-gray-500 dark:text-gray-400">No destinations found. Try a different search.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* Top Attractions */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
             Top <span className="text-gradient">Attractions</span>
           </h2>
           
@@ -121,9 +200,9 @@ const Destinations = () => {
       </section>
 
       {/* Travel Tips */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
             Travel <span className="text-gradient">Planning Tips</span>
           </h2>
           
@@ -151,11 +230,11 @@ const Destinations = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 p-8 rounded-2xl"
+                className="bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl border border-transparent dark:border-gray-800"
               >
                 <div className="text-4xl mb-4">{tip.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{tip.title}</h3>
-                <p className="text-gray-600">{tip.description}</p>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{tip.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{tip.description}</p>
               </motion.div>
             ))}
           </div>

@@ -2,12 +2,14 @@ import { motion } from 'framer-motion';
 import { MapPin, Star, Wifi, Coffee, Dumbbell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Hotel } from '@/types';
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface HotelCardProps {
   hotel: Hotel;
 }
 
 const HotelCard = ({ hotel }: HotelCardProps) => {
+  const { formatPrice } = useCurrency();
   const iconMap: { [key: string]: any } = {
     'WiFi': Wifi,
     'Free WiFi': Wifi,
@@ -17,8 +19,9 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
 
   return (
     <motion.div
-      whileHover={{ y: -8 }}
-      className="group bg-white rounded-2xl shadow-lg overflow-hidden"
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      className="group bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-800"
     >
       <Link to={`/hotels/${hotel.id}`}>
         {/* Image */}
@@ -38,17 +41,17 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
 
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-blue-600 transition-colors">
             {hotel.name}
           </h3>
 
-          <div className="flex items-center gap-1 text-gray-600 mb-3">
+          <div className="flex items-center gap-1 text-gray-600 dark:text-gray-300 mb-3">
             <MapPin className="h-4 w-4" />
             <span className="text-sm">{hotel.location}</span>
           </div>
 
           {/* Reviews */}
-          <div className="flex items-center gap-2 mb-4 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mb-4 text-sm text-gray-500 dark:text-gray-400">
             <span>({hotel.reviews} reviews)</span>
           </div>
 
@@ -59,7 +62,7 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
               return (
                 <div
                   key={index}
-                  className="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded-lg text-xs text-gray-600"
+                  className="flex items-center gap-1 px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded-lg text-xs text-gray-600 dark:text-gray-300"
                 >
                   <Icon className="h-3 w-3" />
                   <span>{amenity}</span>
@@ -69,11 +72,11 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
           </div>
 
           {/* Price */}
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
             <div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-blue-600">${hotel.price}</span>
-                <span className="text-sm text-gray-500">/ night</span>
+                <span className="text-2xl font-bold text-blue-600">{formatPrice(hotel.price)}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">/ night</span>
               </div>
             </div>
             <button className="px-6 py-2.5 gradient-primary text-white rounded-lg font-medium hover:shadow-lg transition-shadow">
